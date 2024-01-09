@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.samra.facedetection.databinding.FragmentResultBinding
 
 class ResultFragment : Fragment() {
@@ -32,13 +33,52 @@ class ResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.adapter = resultAdapter
         binding.plusBtn.setOnClickListener {
-            findNavController().navigate(ResultFragmentDirections.actionResultFragmentToCameraFragment())
+            permissionHandler()
+        }
+    }
+    private fun permissionHandler() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                )
+            ) {
+                Snackbar.make(requireView(), "Permission is required for the camera", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Give permission") {
+                        requestCameraPermission()
+                    }
+                    .show()
+            } else {
+                requestCameraPermission()
+            }
+        } else {
+            navigateToCameraFragment()
         }
     }
 
-    fun observeResponse() {
-
+    private fun requestCameraPermission() {
+        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
+    private fun navigateToCameraFragment() {
+        val action = ResultFragmentDirections.actionResultFragmentToCameraFragment()
+        findNavController().navigate(action)
+    }
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                navigateToCameraFragment()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Camera permission denied",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 }

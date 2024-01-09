@@ -8,14 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.samra.facedetection.databinding.FragmentCameraBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -34,19 +35,15 @@ class CameraFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentCameraBinding.inflate(layoutInflater , container , false)
+        binding = FragmentCameraBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        permissionHandler()
         startCamera(binding.cameraPreview)
     }
-
     private fun startCamera(viewFinder: PreviewView) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
-
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
 
@@ -67,44 +64,14 @@ class CameraFragment : Fragment() {
 //                        proxyProgress(imageProxy)
 //                    }
                 }
-
             cameraProvider.bindToLifecycle(
                 viewLifecycleOwner,
                 cameraSelector,
                 preview,
                 imageAnalysis
             )
-
         }, ContextCompat.getMainExecutor(requireContext()))
 
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
-    private fun permissionHandler() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestCameraPermission()
-        } else {
-        }
-    }
-
-    private fun requestCameraPermission() {
-        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-    }
-
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-                // Permission granted, handle the logic for accessing the camera
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Camera permission denied",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-
 }
