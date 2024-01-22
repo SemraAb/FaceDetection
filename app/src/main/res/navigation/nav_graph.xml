@@ -18,5 +18,8 @@
         <action
             android:id="@+id/action_resultFragment_to_cameraFragment"
             app:destination="@id/cameraFragment" />
+        <argument
+            android:name="result"
+            app:argType="com.samra.facedetection.data.local.Result" />
     </fragment>
 </navigation>

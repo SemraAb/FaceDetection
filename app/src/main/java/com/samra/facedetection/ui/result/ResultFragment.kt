@@ -3,6 +3,7 @@ package com.samra.facedetection.ui.result
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,28 +14,24 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.samra.facedetection.common.base.BaseFragment
+import com.samra.facedetection.data.local.Result
 import com.samra.facedetection.databinding.FragmentResultBinding
 
-class ResultFragment : Fragment() {
-    private lateinit var binding: FragmentResultBinding
+class ResultFragment : BaseFragment<FragmentResultBinding>(
+    FragmentResultBinding::inflate
+) {
     private val resultAdapter: ResultAdapter by lazy { ResultAdapter() }
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentResultBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+    var result = listOf<Result>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.adapter = resultAdapter
+
         binding.plusBtn.setOnClickListener {
             permissionHandler()
         }
+        observeNavigationCallBack()
     }
     private fun permissionHandler() {
         if (ContextCompat.checkSelfPermission(
@@ -81,4 +78,13 @@ class ResultFragment : Fragment() {
                 ).show()
             }
         }
+
+    private fun observeNavigationCallBack() {
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ArrayList<Result>>("key")
+            ?.observe(viewLifecycleOwner) {
+                result = it
+                Log.e("RESULT", "observeNavigationCallBack: $result", )
+                resultAdapter.submitList(result)
+            }
+    }
 }

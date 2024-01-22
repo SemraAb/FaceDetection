@@ -2,27 +2,68 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <RatingBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numStars="5"
-        android:scaleX="0.5"
-        android:scaleY="0.5"
-        android:stepSize="0.5"
-        android:visibility="visible"
-        android:progressTint="#4caf50"
-        android:progressBackgroundTint="#a8a8a8"
-        />
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:progressBackgroundTint="#a8a8a8"
+            android:progressTint="#4caf50"
+            android:scaleX="0.5"
+            android:scaleY="0.5"
+            android:stepSize="0.5"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/testDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="14dp"
+            android:text="26.12.2024"
+            android:textColor="#787878"
+            android:textSize="16dp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/testHour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="14dp"
+            android:text="12:30"
+            android:textColor="#787878"
+            android:textSize="16dp"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/testDate"
-        android:text="26.12.2024"
-        android:textSize="16dp"
-        android:textStyle="italic"
-        android:textColor="#787878"
-        android:layout_marginLeft="14dp"
-        android:layout_gravity="center"/>
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test you can not pass: "
+            android:textStyle="bold|italic"/>
+
+        <TextView
+            android:id="@+id/incorrectTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Smile detection , left head rotate" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/black"/>
 </LinearLayout>
